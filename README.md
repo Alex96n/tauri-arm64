@@ -1,4 +1,4 @@
-# tauri-arm64 # Cross-Platform Toolchain for Tauri Projects (ARM Architecture)
+# Cross-Platform Toolchain for Tauri Projects (ARM Architecture)
 
 ## Overview
 
@@ -14,7 +14,7 @@ Follow these steps to download and use the toolchain:
 
 ### 1. Clone the Repository
 
-Use `git` to clone this repository to your local machine:
+First, clone the repository and navigate into the directory:
 
 ```bash
 git clone https://github.com/alex96n/tauri-arm64.git
@@ -23,25 +23,16 @@ cd tauri-arm64
 
 ### 2. Run the Build Script
 
-Run the provided script to compile your Tauri project for ARM architecture. Replace the placeholders with the appropriate paths and architecture:
+You can run the toolchain from anywhere by specifying the the project folder and optionally the output folder using the flags:
 
 ```bash
-./tauri-build.sh /path/to/project /path/to/output ARCHITECTURE
+./tauri-build.sh -p /path/to/tauri-project -o /path/to/output-folder
 ```
 
-- `/path/to/project`: The full path to your Tauri project directory.
-- `/path/to/output`: The directory where the build artifacts will be stored.
-- `ARCHITECTURE`: The target architecture (e.g., `aarch64`).
+- **`-p`**: Specifies the path to the Tauri project directory.
+- **`-o`**: Specifies the output directory where the build artifacts will be saved.
 
-For example:
-
-```bash
-./tauri-build.sh ~/projects/my-tauri-app ~/build-output aarch64
-```
-
-### 3. Retrieve the Build Output
-
-The compiled binaries will be available in the specified output directory (`/path/to/output`).
+The compiled binaries will be saved in the output folder you specified. If you want to run the script without the -p flag, you will need to copy the script and the Dockerfile into your project folder and run it from there.
 
 ## License
 
