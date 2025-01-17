@@ -1,61 +1,53 @@
 #!/bin/bash
 
-# Ensure the script exits on error
 set -e
 
-# Display usage instructions
-function usage() {
-    echo "Usage: $0 -p <project_path> -o <output_path> -a <architecture> -n <project_name>"
-    echo "  -p  Path to the project directory"
-    echo "  -o  Path to the output directory"
-    echo "  -a  Target architecture (e.g., amd64, arm64)"
-    echo "  -n  Project name (as used in the Dockerfile)"
-    exit 1
-}
+# Default values
+PROJECT_DIR=$(pwd)
+OUTPUT_DIR=$(pwd)
+PROJECT_NAME=$(basename "$PROJECT_DIR")
+DOCKERFILE_DIR=$(pwd)
 
-# Parse command-line arguments
-while getopts "p:o:a:n:" opt; do
-    case $opt in
-        p) PROJECT_DIR="$OPTARG" ;;
-        o) OUTPUT_DIR="$OPTARG" ;;
-        a) ARCH="$OPTARG" ;;
-        n) PROJECT_NAME="$OPTARG" ;;
-        *) usage ;;
-    esac
+# Parse arguments
+while getopts "p:o:" opt; do
+  case $opt in
+    p) PROJECT_DIR=$(realpath "$OPTARG") ;;
+    o) OUTPUT_DIR=$(realpath "$OPTARG") ;;
+    *) echo "Usage: $0 [-p project_dir] [-o output_dir]"; exit 1 ;;
+  esac
 done
-
-# Validate arguments
-if [ -z "$PROJECT_DIR" ] || [ -z "$OUTPUT_DIR" ] || [ -z "$ARCH" ] || [ -z "$PROJECT_NAME" ]; then
-    usage
-fi
 
 # Validate project directory
 if [ ! -d "$PROJECT_DIR" ]; then
-    echo "Error: Project directory '$PROJECT_DIR' does not exist."
-    exit 1
+  echo "Error: Directory '$PROJECT_DIR' does not exist."
+  exit 1
 fi
 
-# Ensure the output directory exists
-mkdir -p "$OUTPUT_DIR"
+# Check if package.json exists in the project directory
+if [ ! -f "$PROJECT_DIR/package.json" ]; then
+  echo "Error: No package.json found in '$PROJECT_DIR'."
+  exit 1
+fi
 
-# Define Docker image name
-IMAGE_NAME="tauri-toolchain:$ARCH"
+# Check if Dockerfile exists in the current script directory
+if [ ! -f "$DOCKERFILE_DIR/Dockerfile" ]; then
+  echo "Error: Dockerfile not found in '$DOCKERFILE_DIR'."
+  exit 1
+fi
 
-# Build the Docker image for the specified architecture
-echo "Building Docker image for $ARCH..."
-docker build --platform "linux/$ARCH" -t "$IMAGE_NAME" \
-    --build-arg PROJECT_NAME="$PROJECT_NAME" \
-    "$PROJECT_DIR"
+# Build Docker image
+IMAGE_NAME="${PROJECT_NAME}-docker:bookworm"
+echo "Building Docker image: $IMAGE_NAME"
+docker build --file "$DOCKERFILE_DIR/Dockerfile" --build-arg PROJECT_NAME="$PROJECT_NAME" -t "$IMAGE_NAME" "$PROJECT_DIR"
 
 # Create a temporary container to extract files
-echo "Creating a temporary container..."
-CONTAINER_ID=$(docker create --platform "linux/$ARCH" "$IMAGE_NAME")
+CONTAINER_ID=$(docker create "$IMAGE_NAME")
 
 # Copy build artifacts from the container to the output directory
-echo "Extracting build artifacts..."
+echo "Extracting build artifacts to $OUTPUT_DIR..."
 docker cp "$CONTAINER_ID:/bundle" "$OUTPUT_DIR"
 
 # Clean up the temporary container
-docker rm "$CONTAINER_ID" > /dev/null
+docker rm "$CONTAINER_ID"
 
-echo "Build artifacts have been saved to: $OUTPUT_DIR"
+echo "Build artifacts are available in the output directory: $OUTPUT_DIR"

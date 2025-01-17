@@ -36,7 +36,6 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash && \
     apt-get install -y nodejs && \
     node --version && npm --version
 
-
 # Stage 2: Prepare for Dependency Installation
 FROM base AS dependencies
 
@@ -47,17 +46,13 @@ WORKDIR /app
 COPY . .
 
 # Install frontend dependencies
-ARG PROJECT_NAME
-RUN cd $PROJECT_NAME && npm install
-
+RUN npm install
 
 # Stage 3: Build the Tauri App
 FROM dependencies AS build
 
 # Build the Tauri app
-WORKDIR /app/$PROJECT_NAME
 RUN NO_STRIP=true npm run tauri build -- --verbose 
-
 
 # Stage 4: Package Artifacts for Output
 FROM debian:bookworm AS output
@@ -66,7 +61,7 @@ FROM debian:bookworm AS output
 WORKDIR /bundle
 
 # Copy the built artifacts from the build stage
-COPY --from=build /app/$PROJECT_NAME/src-tauri/target/release/bundle /bundle
+COPY --from=build /app/src-tauri/target/release/bundle /bundle
 
 # Set the default command to list the build output
-CMD ["ls", "-la"]
+CMD ["ls", "-l"]
