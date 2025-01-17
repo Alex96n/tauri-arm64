@@ -1,4 +1,4 @@
-# tauri-arm64# Cross-Platform Toolchain for Tauri Projects (ARM Architecture)
+# tauri-arm64 # Cross-Platform Toolchain for Tauri Projects (ARM Architecture)
 
 ## Overview
 
@@ -17,8 +17,8 @@ Follow these steps to download and use the toolchain:
 Use `git` to clone this repository to your local machine:
 
 ```bash
-git clone https://github.com/your-username/tauri-arm-toolchain.git
-cd tauri-arm-toolchain
+git clone https://github.com/alex96n/tauri-arm64.git
+cd tauri-arm64
 ```
 
 ### 2. Run the Build Script
@@ -26,17 +26,17 @@ cd tauri-arm-toolchain
 Run the provided script to compile your Tauri project for ARM architecture. Replace the placeholders with the appropriate paths and architecture:
 
 ```bash
-./build.sh /path/to/project /path/to/output ARCHITECTURE
+./tauri-build.sh /path/to/project /path/to/output ARCHITECTURE
 ```
 
 - `/path/to/project`: The full path to your Tauri project directory.
 - `/path/to/output`: The directory where the build artifacts will be stored.
-- `ARCHITECTURE`: The target architecture (e.g., `arm64`).
+- `ARCHITECTURE`: The target architecture (e.g., `aarch64`).
 
 For example:
 
 ```bash
-./build.sh ~/projects/my-tauri-app ~/build-output arm64
+./tauri-build.sh ~/projects/my-tauri-app ~/build-output aarch64
 ```
 
 ### 3. Retrieve the Build Output
