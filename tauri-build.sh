@@ -38,7 +38,7 @@ fi
 # Build Docker image
 IMAGE_NAME="${PROJECT_NAME}-docker:bookworm"
 echo "Building Docker image: $IMAGE_NAME"
-docker build --file "$DOCKERFILE_DIR/Dockerfile" --build-arg PROJECT_NAME="$PROJECT_NAME" -t "$IMAGE_NAME" "$PROJECT_DIR"
+docker build --platform linux/aarch64 --file "$DOCKERFILE_DIR/Dockerfile" --build-arg PROJECT_NAME="$PROJECT_NAME" -t "$IMAGE_NAME" "$PROJECT_DIR"
 
 # Create a temporary container to extract files
 CONTAINER_ID=$(docker create "$IMAGE_NAME")
