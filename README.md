@@ -1,8 +1,8 @@
-# Cross-Platform Toolchain for Tauri Projects (ARM Architecture)
+# Tauri ARM-Compiler for Raspberry Pi
 
 ## Overview
 
-This repository provides a Docker-based toolchain to compile Tauri projects for ARM architecture. It simplifies the process of building cross-platform Tauri apps by leveraging Docker to create consistent and portable build environments.
+A Docker-based toolchain to compile Tauri projects for Raspberry Pi. It contains a Docker image which simulates compilation on Raspberry Pi OS (bookworm) to AppImage, .deb, and .rpm. A script is included for easier compilation. 
 
 ## Prerequisites
 
@@ -23,7 +23,7 @@ cd tauri-arm64
 
 ### 2. Run the Build Script
 
-You can run the toolchain from anywhere by specifying the the project folder and optionally the output folder using the flags:
+You can run the toolchain from anywhere by specifying the project folder and optionally the output folder using the flags:
 
 ```bash
 ./tauri-build.sh -p /path/to/tauri-project -o /path/to/output-folder
@@ -32,7 +32,7 @@ You can run the toolchain from anywhere by specifying the the project folder and
 - **`-p`**: Specifies the path to the Tauri project directory.
 - **`-o`**: Specifies the output directory where the build artifacts will be saved.
 
-The compiled binaries will be saved in the output folder you specified. If you want to run the script without the -p flag, you will need to copy the script and the Dockerfile into your project folder and run it from there.
+The compiled binaries will be saved in the output folder you specified. 
 
 ## License
 
