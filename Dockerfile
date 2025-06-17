@@ -51,8 +51,12 @@ RUN npm install
 # Stage 3: Build the Tauri App
 FROM dependencies AS build
 
-# Build the Tauri app
-RUN NO_STRIP=true npm run tauri build -- --verbose 
+# Install GTK and Xvfb
+RUN apt-get update && \
+    apt-get install -y libgtk-3-dev xvfb && \
+    export DISPLAY=:99 && \
+    Xvfb :99 -screen 0 1024x768x16 & \
+    NO_STRIP=true npm run tauri build -- --verbose 
 
 # Stage 4: Package Artifacts for Output
 FROM debian:bookworm AS output
